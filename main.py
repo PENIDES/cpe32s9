@@ -1,37 +1,56 @@
-import cv2
-import numpy as np
 import streamlit as st
-import tensorflow as tf
+import numpy as np
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobilenet_v2_preprocess_input
+import os
 
-model = tf.keras.models.load_model("mdl_wt.hdf5")
+# Load the trained model
+model = load_model('finals_model.h5')
 
-uploaded_file = st.file_uploader("Choose a image file", type="jpg")
+# Define the class labels
+class_labels = ['dog',
+            'horse',
+             'elephant',
+             'butterfly',
+             'chicken',
+             'cat',
+             'cow',
+             'sheep',
+             'spider',
+             'squirrel']
 
-map_dict = {0: 'dog',
-            1: 'horse',
-            2: 'elephant',
-            3: 'butterfly',
-            4: 'chicken',
-            5: 'cat',
-            6: 'cow',
-            7: 'sheep',
-            8: 'spider',
-            9: 'squirrel'}
+# Function to predict the class of an image
+def predict_image(img_path, model):
+    img = image.load_img(img_path, target_size=(128, 128))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = img_array / 255.0
+    predictions = model.predict(img_array, verbose=0)  # Added verbose=0 for cleaner output
+    predicted_class = class_labels[np.argmax(predictions)]
+    confidence = np.max(predictions)
+    return predicted_class, confidence
+
+# Streamlit app
+st.title("Weather Image Classification")
+st.write("Upload an image to classify the weather condition.")
+
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
 
 if uploaded_file is not None:
-    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-    opencv_image = cv2.imdecode(file_bytes, 1)
-    opencv_image = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-    resized = cv2.resize(opencv_image,(224,224))
+    # Save the uploaded file
+    with open("uploaded_image.jpg", "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-    st.image(opencv_image, channels="RGB")
+    st.image(uploaded_file, caption='Uploaded Image', use_column_width=True)
+    st.write("")
+    st.write("Classify As")
 
-    resized = mobilenet_v2_preprocess_input(resized)
-    img_reshape = resized[np.newaxis,...]
+    # Add a spinner while the model is making a prediction
+    with st.spinner('Model is working...'):
+        label, confidence = predict_image("uploaded_image.jpg", model)
+    
+    st.write(f"Prediction: {label}")
+    st.write(f"Confidence: {confidence:.2f}")
 
-    Generate_pred = st.button("Generate Prediction")
-    if Generate_pred:
-        prediction = model.predict(img_reshape).argmax()
-        st.title("Predicted Label for the image is {}".format(map_dict[prediction]))
+# To run the Streamlit app, use the following command:
+# streamlit run app.py
