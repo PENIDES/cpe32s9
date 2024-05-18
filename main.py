@@ -34,4 +34,4 @@ if uploaded_file is not None:
     Generate_pred = st.button("Generate Prediction")
     if Generate_pred:
         prediction = model.predict(img_reshape).argmax()
-        st.title("Predicted Label for the image is {}".format(map_dict[prediction])))
+        st.title("Predicted Label for the image is {}".format(map_dict[prediction]))
