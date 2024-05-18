@@ -48,5 +48,3 @@ def main():
             predicted_health = predict(test_image, model, labels)
             st.success(f"Predicted Rice Category: {predicted_health}")
 
-if _name_ == "_main_":
-    main()
