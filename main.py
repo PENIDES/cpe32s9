@@ -46,9 +46,9 @@ def main():
             st.write("Predicting...")
             labels = load_labels("labels.txt")
             predicted_health = predict(test_image, model, labels)
-            st.success(f"Predicted Condition Category: {predicted_health}")
+            st.success(f"Predicted Rice Category: {predicted_health}")
 
     
   
-if _name_ == "_main_":
+if name == "main":
     main()
