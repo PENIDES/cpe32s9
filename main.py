@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
+from keras import models
 import streamlit as st
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2,preprocess_input as mobilenet_v2_preprocess_input
 
-model = tf.keras.models.load_model("mdl_wt.hdf5")
+model = models.load_model("mdl_wt.hdf5")
 
 uploaded_file = st.file_uploader("Choose a image file", type="jpg")
 
