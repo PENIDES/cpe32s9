@@ -5,7 +5,7 @@ from tensorflow.keras.preprocessing import image
 import os
 
 # Load the trained model
-model = load_model('finals_model.h5')
+model = load_model('mdl_wt.hdf5')
 
 # Define the class labels
 class_labels = ['dog',
