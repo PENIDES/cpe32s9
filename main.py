@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 from tensorflow.keras.models import load_model
+from keras.layers import BatchNormalization
 from tensorflow.keras.preprocessing import image
 import os
 
@@ -8,16 +9,16 @@ import os
 model = load_model('mdl_wt.hdf5')
 
 # Define the class labels
-class_labels = ['dog',
-            'horse',
-             'elephant',
-             'butterfly',
-             'chicken',
-             'cat',
-             'cow',
-             'sheep',
-             'spider',
-             'squirrel']
+class_labels = [1 = 'dog',
+            2 = 'horse',
+            3 = 'elephant',
+             4 = 'butterfly',
+            5 =  'chicken',
+             6 ='cat',
+            7 = 'cow',
+            8 = 'sheep',
+            9 =  'spider',
+            10 = 'squirrel']
 
 # Function to predict the class of an image
 def predict_image(img_path, model):
