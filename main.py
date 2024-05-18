@@ -9,16 +9,16 @@ import os
 model = load_model('mdl_wt.hdf5')
 
 # Define the class labels
-class_labels = [1 = 'dog',
-            2 = 'horse',
-            3 = 'elephant',
-             4 = 'butterfly',
-            5 =  'chicken',
-             6 ='cat',
-            7 = 'cow',
-            8 = 'sheep',
-            9 =  'spider',
-            10 = 'squirrel']
+class_labels = [1 == 'dog',
+            2 == 'horse',
+            3 == 'elephant',
+             4 == 'butterfly',
+            5 ==  'chicken',
+             6 =='cat',
+            7 == 'cow',
+            8 == 'sheep',
+            9 ==  'spider',
+            10 == 'squirrel']
 
 # Function to predict the class of an image
 def predict_image(img_path, model):
