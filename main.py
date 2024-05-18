@@ -45,6 +45,6 @@ def main():
         if st.button("Predict"):
             st.write("Predicting...")
             labels = load_labels("labels.txt")
-            predicted_health = predict(test_image, model, labels)
-            st.success(f"Predicted Rice Category: {predicted_health}")
+            Ricepredict = predict(test_image, model, labels)
+            st.success(f"Predicted Rice Category: {Ricepredict}")
 
