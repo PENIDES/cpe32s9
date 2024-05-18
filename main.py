@@ -1,56 +1,54 @@
 import streamlit as st
 import numpy as np
+from PIL import Image
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-import os
 
-# Load the trained model
-model = load_model('mdl_wt.hdf5')
+# Function to load and prepare the image
+def load_image(image_file):
+    img = Image.open(image_file)
+    img = img.resize((50, 50))
+    img = np.array(img)
+    if img.shape[-1] == 4:  
+        img = img[..., :3]  
+    img = img.reshape(1, 50, 50, 3)
+    img = img.astype('float32')
+    img /= 255.0
+    return img
 
-# Define the class labels
-class_labels = ['dog',
-            'horse',
-            'elephant',
-             'butterfly',
-            'chicken',
-             'cat',
-            'cow',
-            'sheep',
-            'spider',
-            'squirrel']
+# Function to make predictions
+def predict(image, model, labels):
+    img = load_image(image)
+    result = model.predict(img)
+    predicted_class = np.argmax(result, axis=1)
+    return labels[predicted_class[0]]
 
-# Function to predict the class of an image
-def predict_image(img_path, model):
-    img = image.load_img(img_path, target_size=(128, 128))
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = img_array / 255.0
-    predictions = model.predict(img_array, verbose=0)  # Added verbose=0 for cleaner output
-    predicted_class = class_labels[np.argmax(predictions)]
-    confidence = np.max(predictions)
-    return predicted_class, confidence
+# Load the model
+model = load_model('new_model.h5')  
 
-# Streamlit app
-st.title("Weather Image Classification")
-st.write("Upload an image to classify the weather condition.")
+# Function to load labels from a text file
+def load_labels(filename):
+    with open(filename, 'r') as file:
+        labels = file.readlines()
+    labels = [label.strip() for label in labels]
+    return labels
 
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png"])
+# Streamlit UI
+def main():
+    st.sidebar.title("TEAM 8 Model Deployment in the Cloud")
+    st.title("Rice Classifier")
 
-if uploaded_file is not None:
-    # Save the uploaded file
-    with open("uploaded_image.jpg", "wb") as f:
-        f.write(uploaded_file.getbuffer())
+        # Main page content
+    st.write("Welcome to the Rice Classifcication App")
+    test_image = st.file_uploader("Choose an Image:")
+    if test_image is not None:
+        st.image(test_image, width=300, caption='Uploaded Image')
+        if st.button("Predict"):
+            st.write("Predicting...")
+            labels = load_labels("labels.txt")
+            predicted_health = predict(test_image, model, labels)
+            st.success(f"Predicted Condition Category: {predicted_health}")
 
-    st.image(uploaded_file, caption='Uploaded Image', use_column_width=True)
-    st.write("")
-    st.write("Classify As")
-
-    # Add a spinner while the model is making a prediction
-    with st.spinner('Model is working...'):
-        label, confidence = predict_image("uploaded_image.jpg", model)
     
-    st.write(f"Prediction: {label}")
-    st.write(f"Confidence: {confidence:.2f}")
-
-# To run the Streamlit app, use the following command:
-# streamlit run app.py
+  
+if _name_ == "_main_":
+    main()
