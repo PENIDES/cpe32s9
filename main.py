@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 from tensorflow.keras.models import load_model
-from keras.layers import BatchNormalization
 from tensorflow.keras.preprocessing import image
 import os
 
